@@ -15,38 +15,104 @@ namespace linkQtrainning
             for(int i = 0; i < 10; i++)
             {
                 int rndIndexName = rnd.Next(1,5);
-                var subject = new Subjects();
-
-                subject.SetName(indexNames[rndIndexName]);
-                subject.SetCount(rnd.Next(1, 100));
-                subject.SetWeight(rnd.NextDouble() * rnd.Next(1, 100));
-
+                var subject = new Subjects(indexNames[rndIndexName], rnd.Next(1, 100), rnd.NextDouble() * rnd.Next(1, 100));
                 subjects.Add(subject);
             }
 
+            Console.WriteLine("Collection");
+
             foreach(var subject in subjects)
-            {
+            {               
                 Console.WriteLine(subject);
             }
+                                    
+            Console.WriteLine("Find item by name");
 
-            Console.WriteLine();
-
-            var resultFind = FindSubjectFromCollection("Computer", subjects);
+            var resultFind = FindItemsByName("Computer", subjects);
 
             foreach(var subject in resultFind)
             {
                 Console.WriteLine(subject);
             }
+
+            Console.WriteLine("Add item and sort");
+
+            AddItem(subjects, "Mouse", 4, 63);
+
+            foreach(var subject in SortByName(subjects))
+            {
+                Console.WriteLine(subject);
+            }
+ 
+            Console.WriteLine("Limit");
+
+            foreach(var subject in Limit(subjects, 5))
+            {
+                Console.WriteLine(subject);
+            }
+
+            Console.WriteLine("Group by name");
+            GroupByName(subjects);
         }
 
-        private static IEnumerable<Subjects> FindSubjectFromCollection(string nameCollecton, List<Subjects> collection)
+        private static IEnumerable<Subjects> FindItemsByName(string nameCollection, List<Subjects> collection)
         {
-            if(!collection.Any(subject => subject.Name == nameCollecton))
-            {
-                Console.WriteLine($"Error! We don`t have any subjects like a {nameCollecton}! Retry please!");
-                return collection;
-            }
-            return collection.Where(subject => subject.Name == nameCollecton);
+            if(collection is null)
+                return Enumerable.Empty<Subjects>();
+
+            return collection.Where(subject => subject.Name == nameCollection);
         }
+
+        private static void AddItem(List<Subjects> collection, string nameSubject, int count, double? weight)
+        {
+            if(collection is null)
+                throw new ArgumentNullException(nameof(collection));
+
+            var result = new Subjects(nameSubject, count, weight);
+            collection.Add(result);
+        }
+
+        private static IEnumerable<Subjects> SortByName(List<Subjects> collection)
+        {
+            if(collection is null)
+                throw new ArgumentNullException(nameof(collection));
+
+            return collection.OrderBy(s => s.Name).ToList();
+        }
+
+        private static IEnumerable<Subjects> Limit(IEnumerable<Subjects> collection, int limit)
+        {
+            if(collection is null || limit < 0)
+                return Enumerable.Empty<Subjects>();
+            
+            return collection.Take(limit);
+        }
+
+        private static void GroupByName(IEnumerable<Subjects> collection)
+        {
+            if(collection is null)
+                throw new ArgumentNullException(nameof(collection));
+            
+            var groups = collection.GroupBy(s => s.Name);
+
+            foreach(var group in groups)
+            {
+                Console.WriteLine($"Group: {group.Key}, Count: {group.Count()}");
+                foreach(var subject in group)
+                {
+                    Console.WriteLine($"\tSubject: {subject.Name}, Count: {subject.Count}, Weight: {subject.Weight}");
+                }
+            }
+        }
+
+        // Проекции, разобраться сильнее!
+    /*  private static IEnumerable<Subjects> TakeNames(IEnumerable<Subjects> collection)
+        {
+            if(collection is null)
+                throw new ArgumentNullException(nameof(collection));
+                
+            return collection.Select(s => s.Name);
+        } 
+        */
     }
 }

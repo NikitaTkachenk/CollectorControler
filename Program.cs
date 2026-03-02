@@ -18,53 +18,158 @@ namespace linkQtrainning
                 subjects.Add(subject);
             }
 
-            Console.WriteLine("Collection");
+            Console.WriteLine(" --- Collection controler --- ");
 
-            foreach(var subject in subjects)
-            {               
-                Console.WriteLine(subject);
-            }
-                                    
-            Console.WriteLine("Find item by name");
-
-            var resultFind = FindItemsByName("Computer", subjects);
-
-            foreach(var subject in resultFind)
+            while (true)
             {
-                Console.WriteLine(subject);
+                Console.WriteLine();
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("1. Add item to collection.");
+                Console.WriteLine("2. Remove item from collection.");
+                Console.WriteLine("3. Find an item by name.");
+                Console.WriteLine("4. Sorting collection by name.");
+                Console.WriteLine("5. Limit for collection.");
+                Console.WriteLine("6. Enter in group by names.");
+                Console.WriteLine("7. Save only a names collection.");
+                Console.WriteLine("8. Output everything.");
+                Console.WriteLine();
+                Console.WriteLine("0. !Exit!.");
+                Console.WriteLine("------------------------------------");
+
+                bool boolWhileChoice = int.TryParse(Console.ReadLine(), out int whileChoice);
+
+                switch (whileChoice)
+                {
+                    case 1:
+                        Console.WriteLine("Please! Enter a product name: ");
+                        var inputItemName_Case1 = Console.ReadLine();
+                        while (inputItemName_Case1 is null)
+                        {
+                            inputItemName_Case1 = Console.ReadLine();
+                            if(inputItemName_Case1 is null)
+                                Console.WriteLine("\t - Error! Name is wrong!");
+                        }
+
+                        int inputItemCount_Case1;
+                        Console.WriteLine("Please! Enter a product count: ");
+                        while (!int.TryParse(Console.ReadLine(), out inputItemCount_Case1))
+                        {
+                            Console.WriteLine("\t - Error! Count is wrong!");
+                            Console.WriteLine("Please! Enter a product count: ");
+                        }
+
+                        double inputItemWeight_Case1;
+                        Console.WriteLine("Please! Enter a product weight: ");
+                        while (!double.TryParse(Console.ReadLine(), out inputItemWeight_Case1))
+                        {
+                            Console.WriteLine("\t - Error! weight is wrong!");
+                            Console.WriteLine("Please! Enter a product weight: ");
+                        }
+                        
+                        AddItem(subjects, inputItemName_Case1, inputItemCount_Case1, inputItemWeight_Case1);
+                        Console.WriteLine();
+                        Console.WriteLine($"Item: {inputItemName_Case1} has been added! With these parameters, count: {inputItemCount_Case1} and weight: {inputItemWeight_Case1}. Successful!");
+                        break;
+
+                    case 2:
+                        Console.WriteLine("Please! Enter a product name: ");
+                        var inputItemName_Case2 = Console.ReadLine();
+                        while (inputItemName_Case2 is null)
+                        {
+                            inputItemName_Case2 = Console.ReadLine();
+                            if(inputItemName_Case2 is null)
+                                Console.WriteLine("\t - Error! Name is wrong!");
+                        }
+
+                        int inputItemCount_Case2;
+                        Console.WriteLine("Please! Enter a product count: ");
+                        while (!int.TryParse(Console.ReadLine(), out inputItemCount_Case2))
+                        {
+                            Console.WriteLine("\t - Error! Count is wrong!");
+                            Console.WriteLine("Please! Enter a product count: ");
+                        }
+                        Console.WriteLine();
+                        RemoveItem(subjects, inputItemName_Case2, inputItemCount_Case2);
+                        Console.WriteLine();
+                        Console.WriteLine("Remove from collection is successful!");
+                        break;
+
+                    case 3:
+                        Console.WriteLine("Please! Enter a product name: ");
+                        var inputItemName_Case3 = Console.ReadLine();
+                        while (inputItemName_Case3 is null)
+                        {
+                            inputItemName_Case3 = Console.ReadLine();
+                            if(inputItemName_Case3 is null)
+                                Console.WriteLine("\t - Error! Name is wrong!");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Find by name is successful!");
+                        Console.WriteLine();
+                        ForeachOutput(FindItemsByName(inputItemName_Case3, subjects));
+                        break;
+
+                    case 4:
+                        Console.WriteLine();
+                        ForeachOutput(SortByName(subjects));
+                        Console.WriteLine();
+                        Console.WriteLine("Sorting was added!");
+                        break;
+
+                    case 5:
+                        int inputLimit;
+                        Console.WriteLine("Please! Enter a limit for collection: ");
+                        while (!int.TryParse(Console.ReadLine(), out inputLimit))
+                        {
+                            Console.WriteLine("\t - Error! Count is wrong!");
+                            Console.WriteLine("Please! Enter a product count: ");
+                        }
+                        Console.WriteLine();
+                        ForeachOutput(Limit(subjects, inputLimit));
+                        Console.WriteLine();
+                        Console.WriteLine("Limit was added!");
+                        break;
+
+                    case 6:
+                        Console.WriteLine();
+                        GroupByName(subjects);
+                        Console.WriteLine();
+                        Console.WriteLine("Groups was added!");
+                        break;
+
+                    case 7:
+                        Console.WriteLine();
+                        ForeachOutput(TakeNames(subjects));
+                        Console.WriteLine();
+                        Console.WriteLine("Names were added!");
+                        break;
+
+                    case 8:
+                        Console.WriteLine("Collection was be output. Successful!");
+                        Console.WriteLine();
+                        ForeachOutput(subjects);
+                        break;
+                    case 0:
+                        return;
+                    default:
+                    break;
+                }
             }
+        }
 
-            Console.WriteLine("Add item and sort");
-
-            AddItem(subjects, "Mouse", 4, 63);
-
-            foreach(var subject in SortByName(subjects))
+        private static void ForeachOutput(IEnumerable<Subjects> collection)
+        {
+            foreach(var item in collection)
             {
-                Console.WriteLine(subject);
+                Console.WriteLine(item); 
             }
- 
-            Console.WriteLine("Limit");
+        }
 
-            foreach(var subject in Limit(subjects, 5))
+        private static void ForeachOutput(IEnumerable<string> collection)
+        {
+            foreach(var item in collection)
             {
-                Console.WriteLine(subject);
-            }
-
-            Console.WriteLine("Group by name");
-            GroupByName(subjects);
-
-            TakeNames(subjects);
-
-            foreach (var subject in TakeNames(subjects))
-            {
-                Console.WriteLine(subject);
-            }
-
-            RemoveItem(subjects, "Computer", 100);
-
-            foreach (var subject in subjects)
-            {
-                Console.WriteLine(subject);
+                Console.WriteLine(item); 
             }
         }
 

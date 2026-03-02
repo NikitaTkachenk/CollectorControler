@@ -12,10 +12,9 @@ namespace linkQtrainning
             var subjects = new List<Subjects>();
             var indexNames = new string[5] {"Phone", "Laptop", "Computer", "Oclock", "Lighter"};
 
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 5; i++)
             {
-                int rndIndexName = rnd.Next(1,5);
-                var subject = new Subjects(indexNames[rndIndexName], rnd.Next(1, 100), rnd.NextDouble() * rnd.Next(1, 100));
+                var subject = new Subjects(indexNames[i], rnd.Next(1, 100), rnd.NextDouble() * rnd.Next(1, 100));
                 subjects.Add(subject);
             }
 
@@ -53,6 +52,20 @@ namespace linkQtrainning
 
             Console.WriteLine("Group by name");
             GroupByName(subjects);
+
+            TakeNames(subjects);
+
+            foreach (var subject in TakeNames(subjects))
+            {
+                Console.WriteLine(subject);
+            }
+
+            RemoveItem(subjects, "Computer", 100);
+
+            foreach (var subject in subjects)
+            {
+                Console.WriteLine(subject);
+            }
         }
 
         private static IEnumerable<Subjects> FindItemsByName(string nameCollection, List<Subjects> collection)
@@ -71,6 +84,35 @@ namespace linkQtrainning
             var result = new Subjects(nameSubject, count, weight);
             collection.Add(result);
         }
+
+        private static Subjects FindItemToReturn(List<Subjects> collection, string nameSubject)
+        {
+            foreach(var item in collection)
+            {
+                if(item.Name == nameSubject)
+                    return item;
+            }
+            return null;
+        }
+
+        private static void RemoveItem(List<Subjects> collection, string nameSubject, int count)
+        {
+            if(collection is null)
+                throw new ArgumentNullException(nameof(collection));
+
+            if(count <= 0)
+                return;
+
+            var item = FindItemToReturn(collection, nameSubject);
+
+            if(item is null)    
+                return;
+ 
+            if(item.Count <= count)
+                collection.Remove(item);
+            else
+                item.Decrease(count); 
+        } 
 
         private static IEnumerable<Subjects> SortByName(List<Subjects> collection)
         {
@@ -105,14 +147,13 @@ namespace linkQtrainning
             }
         }
 
-        // Проекции, разобраться сильнее!
-    /*  private static IEnumerable<Subjects> TakeNames(IEnumerable<Subjects> collection)
+        private static IEnumerable<string> TakeNames(IEnumerable<Subjects> collection)
         {
             if(collection is null)
                 throw new ArgumentNullException(nameof(collection));
-                
-            return collection.Select(s => s.Name);
+
+            var result = collection.Select(s => s.Name).Distinct();  
+            return result;
         } 
-        */
     }
 }

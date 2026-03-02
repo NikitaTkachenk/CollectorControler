@@ -27,6 +27,17 @@ namespace linkQtrainning
             SetWeight(weight);
         }
 
+        public void Decrease(int value)
+        {
+            if(value <= 0)
+                throw new ArgumentNullException(nameof(value));
+            
+            if(value > Count)
+                Count = 0;
+            else    
+                Count -= value;
+        }
+
         public string SetName(string name)
         {
             return Name = name;
